@@ -1,0 +1,15 @@
+# Visual Studio & SSIS
+*.user
+*.suo
+*.cache
+*.dbmdl
+*.bak
+*.log
+
+# PowerBI autosaves
+*.pbipreport
+*.pbitmp
+
+# OS junk
+.DS_Store
+Thumbs.db
