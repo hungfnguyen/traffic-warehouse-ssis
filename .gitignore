@@ -11,13 +11,6 @@
 *.dll
 *.pdb
 
-# === SSIS generated + tạm ===
-*.dtproj.user
-*.dtproj.vspscc
-*.conmgr
-*.dtsx
-*.ispac
-
 # === Build & binary output folders ===
 bin/
 obj/
