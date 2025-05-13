@@ -11,8 +11,8 @@
   DTS:LocaleID="1066"
   DTS:ObjectName="Package2"
   DTS:PackageType="5"
-  DTS:VersionBuild="28"
-  DTS:VersionGUID="{255CF756-07D7-4915-ACEB-DA977ABBA8FE}">
+  DTS:VersionBuild="29"
+  DTS:VersionGUID="{412AD6F2-0F33-4EB3-989C-A9829358C133}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -1147,7 +1147,7 @@
         <NodeLayout
           Size="242.4,41.6"
           Id="Package\DFT_Load_CSV_To_Stage_Dataset"
-          TopLeft="202.857143288973,90.999999920235" />
+          TopLeft="225.000000478967,153.705882218212" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -1155,49 +1155,47 @@
     design-time-name="Package\DFT_Load_CSV_To_Stage_Dataset">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="202.4,41.6"
           Id="Package\DFT_Load_CSV_To_Stage_Dataset\SRC_CSV_TrafficAccidents"
-          TopLeft="356.984127744052,41.124182970489" />
+          TopLeft="329.841270543415,114.535947612023" />
         <NodeLayout
           Size="164,41.6"
           Id="Package\DFT_Load_CSV_To_Stage_Dataset\DST_SQL_Dataset"
-          TopLeft="333.219697679034,181.926618973036" />
+          TopLeft="332.505411963228,255.33838361457" />
         <EdgeLayout
           Id="Package\DFT_Load_CSV_To_Stage_Dataset.Paths[Flat File Source Output]"
-          TopLeft="458.184127744052,82.724182970489">
+          TopLeft="431.041270543415,156.135947612023">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-42.964430065018,99.2024360025467"
+              EndConnector="-16.535858580187,99.202436002547"
               Start="0,0"
-              End="-42.964430065018,91.7024360025467">
+              End="-16.535858580187,91.702436002547">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,45.6012180012734" />
+                    End="0,45.6012180012735" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,45.6012180012734"
-                    Point2="0,49.6012180012734"
-                    Point3="-4,49.6012180012734" />
+                    Point1="0,45.6012180012735"
+                    Point2="0,49.6012180012735"
+                    Point3="-4,49.6012180012735" />
                   <mssgle:LineSegment
-                    End="-38.964430065018,49.6012180012734" />
+                    End="-12.535858580187,49.6012180012735" />
                   <mssgle:CubicBezierSegment
-                    Point1="-38.964430065018,49.6012180012734"
-                    Point2="-42.964430065018,49.6012180012734"
-                    Point3="-42.964430065018,53.6012180012734" />
+                    Point1="-12.535858580187,49.6012180012735"
+                    Point2="-16.535858580187,49.6012180012735"
+                    Point3="-16.535858580187,53.6012180012735" />
                   <mssgle:LineSegment
-                    End="-42.964430065018,91.7024360025467" />
+                    End="-16.535858580187,91.702436002547" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-52.037332220009,54.6012180012734,61.110234375,9.5732421875"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>

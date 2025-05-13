@@ -1,89 +1,111 @@
-USE Traffic_Stage;
+﻿-- =======================================
+-- 03_create_stage_tables.sql
+-- Mục đích: Tạo các bảng trong schema Traffic_Stage
+-- Dùng để staging dữ liệu từ Source → chuẩn hóa để Load lên DW
+-- =======================================
+
+
+
+-- 0. Tạo schema nếu chưa tồn tại
+IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'Traffic_Stage')
+BEGIN
+    EXEC('CREATE SCHEMA Traffic_Stage');
+END
 GO
 
--- Schema stg
-CREATE SCHEMA stg;
+-- =======================================
+-- 1. Stage cho bảng FactTime
+-- =======================================
+CREATE TABLE Traffic_Stage.FactTime (
+    CrashID INT PRIMARY KEY,
+    CrashDate DATETIME2,
+    CrashType VARCHAR(100),
+    InjuriesTotal INT,
+    InjuriesFatal INT,
+    InjuriesIncapacitating INT,
+    InjuriesNonIncapacitating INT,
+    DameLevel VARCHAR(50),
+    NumberUnits INT,
+    MostSevereInjury VARCHAR(50)
+);
 GO
 
--- Dim Staging Tables
-CREATE TABLE stg.DimDate (
-    DateKey bigint,
-    [Date] datetime2,
-    [Hour] int,
-    [DayOfWeek] varchar(50),
-    [DayOfWeekNumber] int,
-    [Day] int,
-    [Month] int
+-- =======================================
+-- 2. Stage cho bảng FactCause
+-- =======================================
+CREATE TABLE Traffic_Stage.FactCause (
+    CrashID INT PRIMARY KEY,
+    Lighting VARCHAR(50),
+    Weather VARCHAR(50),
+    TrafficControlDevice VARCHAR(60),
+    Alignment VARCHAR(60),
+    CrashType VARCHAR(100),
+    TrafficWayType VARCHAR(100),
+    RoadWayDefect VARCHAR(20),
+    RoadWaySurface VARCHAR(50),
+    PrimContributoryCause VARCHAR(100)
 );
+GO
 
-CREATE TABLE stg.DimLighting (
-    LightingID int,
-    Lighting varchar(50)
+-- =======================================
+-- 3. Stage cho bảng DimDate (tách từ CrashDate)
+-- =======================================
+CREATE TABLE Traffic_Stage.DimDate (
+	[CrashID] [int] NOT NULL,
+	[CrashDate] [datetime2](7) NULL,
+	[CrashHour] [int] NULL,
+	[CrashDayOfWeek] [varchar](50) NULL,
+	[CrashDayOfWeekNumber] [int] NULL,
+	[CrashDay] [int] NULL,
+	[CrashMonth] [int] NULL,
 );
+GO
 
-CREATE TABLE stg.DimWeather (
-    WeatherID int,
-    Weather varchar(50)
-);
+-- =======================================
+-- 4. Stage cho các Dimension riêng biệt (phục vụ kiểm tra, lookup)
+-- =======================================
 
-CREATE TABLE stg.DimTrafficControlDevice (
-    ControlDeviceID int,
-    TrafficControlDevice varchar(60)
+CREATE TABLE Traffic_Stage.DimLighting (
+    Lighting VARCHAR(50)
 );
+GO
 
-CREATE TABLE stg.DimAlignment (
-    AlignmentID int,
-    Alignment varchar(60)
+CREATE TABLE Traffic_Stage.DimWeather (
+    Weather VARCHAR(50)
 );
+GO
 
-CREATE TABLE stg.DimCrashType (
-    CrashTypeID int,
-    CrashType varchar(100)
+CREATE TABLE Traffic_Stage.DimTrafficControlDevice (
+    TrafficControlDevice VARCHAR(60)
 );
+GO
 
-CREATE TABLE stg.DimTrafficWayType (
-    TrafficWayTypeID int,
-    TrafficWayType varchar(100)
+CREATE TABLE Traffic_Stage.DimAlignment (
+    Alignment VARCHAR(60)
 );
+GO
 
-CREATE TABLE stg.DimRoadWayDefect (
-    RoadWayDefectID int,
-    RoadWayDefect varchar(20)
+CREATE TABLE Traffic_Stage.DimCrashType (
+    CrashType VARCHAR(100)
 );
+GO
 
-CREATE TABLE stg.DimContributoryCause (
-    ContributoryCauseID int,
-    PrimContributoryCause varchar(100)
+CREATE TABLE Traffic_Stage.DimTrafficWayType (
+    TrafficWayType VARCHAR(100)
 );
+GO
 
-CREATE TABLE stg.DimRoadWaySurface (
-    RoadWaySurfaceID int,
-    RoadWaySurface varchar(50)
+CREATE TABLE Traffic_Stage.DimRoadWayDefect (
+    RoadWayDefect VARCHAR(20)
 );
+GO
 
--- Fact Staging Tables
-CREATE TABLE stg.FactTime (
-    CrashID int,
-    DateKey bigint,
-    CrashTypeKey int,
-    InjuriesTotal int,
-    InjuriesFatal int,
-    InjuriesIncapacitating int,
-    InjuriesNonIncapacitating int,
-    DameLevel varchar(50),
-    NumberUnits int,
-    MostSevereInjury varchar(50)
+CREATE TABLE Traffic_Stage.DimRoadWaySurface (
+    RoadWaySurface VARCHAR(50)
 );
+GO
 
-CREATE TABLE stg.FactCause (
-    CrashID int,
-    LightingKey int,
-    WeatherKey int,
-    TrafficControlDeviceKey int,
-    AlignmentKey int,
-    CrashTypeKey int,
-    TrafficWayTypeKey int,
-    RoadWayDefectKey int,
-    RoadWaySurfaceKey int,
-    ContributoryCauseKey int
+CREATE TABLE Traffic_Stage.DimContributoryCause (
+    PrimContributoryCause VARCHAR(100)
 );
+GO
