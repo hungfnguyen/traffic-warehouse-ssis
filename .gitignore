@@ -1,15 +1,42 @@
-# Visual Studio & SSIS
+# === Visual Studio general ===
+.vs/
 *.user
 *.suo
 *.cache
 *.dbmdl
 *.bak
 *.log
+*.obj
+*.exe
+*.dll
+*.pdb
 
-# PowerBI autosaves
+# === SSIS generated + tạm ===
+*.dtproj.user
+*.dtproj.vspscc
+*.conmgr
+*.dtsx
+*.ispac
+
+# === Build & binary output folders ===
+bin/
+obj/
+
+# === VS Copilot + IntelliSense ===
+*.vsidx
+*.db
+*.db-shm
+*.db-wal
+*.json
+
+# === Power BI autosave ===
 *.pbipreport
 *.pbitmp
 
-# OS junk
+# === OS junk ===
 .DS_Store
 Thumbs.db
+
+# === Jupyter checkpoints (nếu có sử dụng notebook phân tích) ===
+.ipynb_checkpoints/
+
