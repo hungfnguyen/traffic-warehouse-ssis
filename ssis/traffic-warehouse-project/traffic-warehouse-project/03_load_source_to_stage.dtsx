@@ -11,8 +11,8 @@
   DTS:LocaleID="1066"
   DTS:ObjectName="03_load_source_to_stage"
   DTS:PackageType="5"
-  DTS:VersionBuild="37"
-  DTS:VersionGUID="{452C5371-EC8E-4C3B-9C7F-89B34F06EF0B}">
+  DTS:VersionBuild="52"
+  DTS:VersionGUID="{5015BFB8-B667-4B80-83E3-1AAB87DA05C1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -130,6 +130,10 @@
                           dataType="str"
                           length="100"
                           name="Alignment" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\DST_stg_DimAlignment.Inputs[OLE DB Destination Input].ExternalColumns[AlignmentID]"
+                          dataType="i4"
+                          name="AlignmentID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -402,6 +406,10 @@
                           dataType="str"
                           length="100"
                           name="PrimContributoryCause" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\DEST_ContributoryCause.Inputs[OLE DB Destination Input].ExternalColumns[CauseID]"
+                          dataType="i4"
+                          name="CauseID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -674,6 +682,10 @@
                           dataType="str"
                           length="100"
                           name="CrashType" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\DST_stg_DimCrashType.Inputs[OLE DB Destination Input].ExternalColumns[CrashTypeID]"
+                          dataType="i4"
+                          name="CrashTypeID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -1476,12 +1488,6 @@ WHERE crash_date IS NOT NULL;</property>
                           externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Alignment]"
                           lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause.Outputs[OLE DB Source Output].Columns[AlignmentID]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[CrashTypeID]"
-                          cachedDataType="i4"
-                          cachedName="CrashTypeID"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashType]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause.Outputs[OLE DB Source Output].Columns[CrashTypeID]" />
-                        <inputColumn
                           refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[TrafficWayTypeID]"
                           cachedDataType="i4"
                           cachedName="TrafficWayTypeID"
@@ -1505,6 +1511,12 @@ WHERE crash_date IS NOT NULL;</property>
                           cachedName="ContributoryCauseID"
                           externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PrimContributoryCause]"
                           lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause.Outputs[OLE DB Source Output].Columns[ContributoryCauseID]" />
+                        <inputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[CrashTypeID]"
+                          cachedDataType="i4"
+                          cachedName="CrashTypeID"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashType]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause.Outputs[OLE DB Source Output].Columns[CrashTypeID]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -1610,7 +1622,7 @@ WHERE crash_date IS NOT NULL;</property>
                     <property
                       dataType="System.String"
                       description="Specifies the name of the database object used to open a rowset."
-                      name="OpenRowset"></property>
+                      name="OpenRowset">[dbo].[crash_event]</property>
                     <property
                       dataType="System.String"
                       description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -1625,7 +1637,7 @@ WHERE crash_date IS NOT NULL;</property>
     weather_id AS WeatherID,
     control_device_id AS TrafficControlDeviceID,
     alignment_id AS AlignmentID,
-    crash_type_id AS CrashTypeID,
+    first_crash_type_id AS CrashTypeID,
     traffic_way_id AS TrafficWayTypeID,
     road_defect_id AS RoadWayDefectID,
     road_surface_id AS RoadWaySurfaceID,
@@ -1899,11 +1911,185 @@ FROM Traffic_Source.dbo.crash_event</property>
               version="1">
               <components>
                 <component
-                  refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime"
+                  refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="Lookup"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[first_crash_type]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[first_crash_type]) [refTable]
+where [refTable].[first_crash_type_id] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="first_crash_type_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="first_crash_type" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[first_crash_type_id]};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1258</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Connections[OleDbConnection]"
+                      connectionManagerID="{C338E52E-5A68-4F96-B078-85E9104BCC94}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[LAPTOP-DTKDJMOS Traffic_Source]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Inputs[Lookup Input].Columns[first_crash_type_id]"
+                          cachedDataType="i4"
+                          cachedName="first_crash_type_id"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[first_crash_type_id]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">first_crash_type_id</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="FailComponent"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output].Columns[first_crash_type_id]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output].Columns[first_crash_type_id]"
+                          name="first_crash_type_id"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">first_crash_type_id</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output].Columns[first_crash_type]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Copy Column"
+                          length="100"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output].Columns[first_crash_type]"
+                          name="first_crash_type"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">first_crash_type</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination"
                   componentClassID="Microsoft.OLEDBDestination"
                   contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
                   description="OLE DB Destination"
-                  name="DST_stg_FactTime"
+                  name="OLE DB Destination"
                   usesDispositions="true"
                   version="4">
                   <properties>
@@ -1956,7 +2142,7 @@ FROM Traffic_Source.dbo.crash_event</property>
                   </properties>
                   <connections>
                     <connection
-                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Connections[OleDbConnection]"
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Connections[OleDbConnection]"
                       connectionManagerID="{C1B43B1D-EABB-4A15-AAFF-09FD27625059}:external"
                       connectionManagerRefId="Project.ConnectionManagers[LAPTOP-DTKDJMOS.Traffic_Stage]"
                       description="The OLE DB runtime connection used to access the database."
@@ -1964,110 +2150,125 @@ FROM Traffic_Source.dbo.crash_event</property>
                   </connections>
                   <inputs>
                     <input
-                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input]"
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input]"
                       errorOrTruncationOperation="Insert"
                       errorRowDisposition="FailComponent"
                       hasSideEffects="true"
                       name="OLE DB Destination Input">
                       <inputColumns>
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[CrashID]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[crash_id]"
                           cachedDataType="i4"
-                          cachedName="CrashID"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[CrashID]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[CrashID]" />
+                          cachedName="crash_id"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashID]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[crash_id]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[InjuriesTotal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[crash_date]"
+                          cachedDataType="dbTimeStamp2"
+                          cachedName="crash_date"
+                          cachedScale="7"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashDate]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[crash_date]" />
+                        <inputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[first_crash_type]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="first_crash_type"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashType]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output].Columns[first_crash_type]" />
+                        <inputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[injuries_total]"
                           cachedDataType="r8"
-                          cachedName="InjuriesTotal"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesTotal]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesTotal]" />
+                          cachedName="injuries_total"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesTotal]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_total]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[InjuriesFatal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[injuries_fatal]"
                           cachedDataType="r8"
-                          cachedName="InjuriesFatal"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesFatal]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesFatal]" />
+                          cachedName="injuries_fatal"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesFatal]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_fatal]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[InjuriesIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[injuries_incapacitating]"
                           cachedDataType="r8"
-                          cachedName="InjuriesIncapacitating"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesIncapacitating]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesIncapacitating]" />
+                          cachedName="injuries_incapacitating"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesIncapacitating]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_incapacitating]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[InjuriesNonIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[injuries_non_incapacitating]"
                           cachedDataType="r8"
-                          cachedName="InjuriesNonIncapacitating"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesNonIncapacitating]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesNonIncapacitating]" />
+                          cachedName="injuries_non_incapacitating"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesNonIncapacitating]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_non_incapacitating]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[DameLevel]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[damage_level]"
                           cachedCodepage="1252"
                           cachedDataType="str"
                           cachedLength="50"
-                          cachedName="DameLevel"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[DameLevel]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[DameLevel]" />
+                          cachedName="damage_level"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DameLevel]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[damage_level]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[NumberUnits]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[number_units]"
                           cachedDataType="i4"
-                          cachedName="NumberUnits"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[NumberUnits]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[NumberUnits]" />
+                          cachedName="number_units"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[NumberUnits]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[number_units]" />
                         <inputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].Columns[MostSevereInjury]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[most_severe_injury]"
                           cachedCodepage="1252"
                           cachedDataType="str"
                           cachedLength="50"
-                          cachedName="MostSevereInjury"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[MostSevereInjury]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[MostSevereInjury]" />
+                          cachedName="most_severe_injury"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[MostSevereInjury]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[most_severe_injury]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[CrashID]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashID]"
                           dataType="i4"
                           name="CrashID" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[CrashDate]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashDate]"
                           dataType="dbTimeStamp2"
                           name="CrashDate"
                           scale="7" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[CrashType]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CrashType]"
                           codePage="1252"
                           dataType="str"
                           length="100"
                           name="CrashType" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesTotal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesTotal]"
                           dataType="i4"
                           name="InjuriesTotal" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesFatal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesFatal]"
                           dataType="i4"
                           name="InjuriesFatal" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesIncapacitating]"
                           dataType="i4"
                           name="InjuriesIncapacitating" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesNonIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[InjuriesNonIncapacitating]"
                           dataType="i4"
                           name="InjuriesNonIncapacitating" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[DameLevel]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DameLevel]"
                           codePage="1252"
                           dataType="str"
                           length="50"
                           name="DameLevel" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[NumberUnits]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[NumberUnits]"
                           dataType="i4"
                           name="NumberUnits" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input].ExternalColumns[MostSevereInjury]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[MostSevereInjury]"
                           codePage="1252"
                           dataType="str"
                           length="50"
@@ -2077,22 +2278,22 @@ FROM Traffic_Source.dbo.crash_event</property>
                   </inputs>
                   <outputs>
                     <output
-                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Outputs[OLE DB Destination Error Output]"
+                      refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
                       exclusionGroup="1"
                       isErrorOut="true"
                       name="OLE DB Destination Error Output"
-                      synchronousInputId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input]">
+                      synchronousInputId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input]">
                       <outputColumns>
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
                           dataType="i4"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
                           name="ErrorCode"
                           specialFlags="1" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
                           dataType="i4"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
                           name="ErrorColumn"
                           specialFlags="2" />
                       </outputColumns>
@@ -2116,7 +2317,7 @@ FROM Traffic_Source.dbo.crash_event</property>
                     <property
                       dataType="System.String"
                       description="Specifies the name of the database object used to open a rowset."
-                      name="OpenRowset"></property>
+                      name="OpenRowset">[dbo].[crash_event]</property>
                     <property
                       dataType="System.String"
                       description="Specifies the variable that contains the name of the database object used to open a rowset."
@@ -2151,7 +2352,7 @@ FROM Traffic_Source.dbo.crash_event</property>
                       dataType="System.Int32"
                       description="Specifies the mode used to access the database."
                       name="AccessMode"
-                      typeConverter="AccessMode">2</property>
+                      typeConverter="AccessMode">0</property>
                     <property
                       dataType="System.String"
                       description="The mappings between the parameters in the SQL command and variables."
@@ -2171,120 +2372,184 @@ FROM Traffic_Source.dbo.crash_event</property>
                       name="OLE DB Source Output">
                       <outputColumns>
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[CrashID]"
-                          dataType="i4"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[crash_date]"
+                          dataType="dbTimeStamp2"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[CrashID]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[CrashID]"
-                          name="CrashID"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[crash_date]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[crash_date]"
+                          name="crash_date"
+                          scale="7"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesTotal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_total]"
                           dataType="r8"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesTotal]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesTotal]"
-                          name="InjuriesTotal"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_total]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_total]"
+                          name="injuries_total"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesFatal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_incapacitating]"
                           dataType="r8"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesFatal]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesFatal]"
-                          name="InjuriesFatal"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_incapacitating]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_incapacitating]"
+                          name="injuries_incapacitating"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_non_incapacitating]"
                           dataType="r8"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesIncapacitating]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesIncapacitating]"
-                          name="InjuriesIncapacitating"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_non_incapacitating]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_non_incapacitating]"
+                          name="injuries_non_incapacitating"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesNonIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_fatal]"
                           dataType="r8"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesNonIncapacitating]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[InjuriesNonIncapacitating]"
-                          name="InjuriesNonIncapacitating"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_fatal]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[injuries_fatal]"
+                          name="injuries_fatal"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[DameLevel]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[damage_level]"
                           codePage="1252"
                           dataType="str"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[DameLevel]"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[damage_level]"
                           length="50"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[DameLevel]"
-                          name="DameLevel"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[damage_level]"
+                          name="damage_level"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[NumberUnits]"
-                          dataType="i4"
-                          errorOrTruncationOperation="Conversion"
-                          errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[NumberUnits]"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[NumberUnits]"
-                          name="NumberUnits"
-                          truncationRowDisposition="FailComponent" />
-                        <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[MostSevereInjury]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[most_severe_injury]"
                           codePage="1252"
                           dataType="str"
                           errorOrTruncationOperation="Conversion"
                           errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[MostSevereInjury]"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[most_severe_injury]"
                           length="50"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[MostSevereInjury]"
-                          name="MostSevereInjury"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[most_severe_injury]"
+                          name="most_severe_injury"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[number_units]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[number_units]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[number_units]"
+                          name="number_units"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[first_crash_type_id]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[first_crash_type_id]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[first_crash_type_id]"
+                          name="first_crash_type_id"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[crash_id]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[crash_id]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].Columns[crash_id]"
+                          name="crash_id"
                           truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[CrashID]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[crash_id]"
                           dataType="i4"
-                          name="CrashID" />
+                          name="crash_id" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesTotal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[crash_date]"
+                          dataType="dbTimeStamp2"
+                          name="crash_date"
+                          scale="7" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[cause_id]"
+                          dataType="i4"
+                          name="cause_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[lighting_id]"
+                          dataType="i4"
+                          name="lighting_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[weather_id]"
+                          dataType="i4"
+                          name="weather_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[road_surface_id]"
+                          dataType="i4"
+                          name="road_surface_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[road_defect_id]"
+                          dataType="i4"
+                          name="road_defect_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[alignment_id]"
+                          dataType="i4"
+                          name="alignment_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[traffic_way_id]"
+                          dataType="i4"
+                          name="traffic_way_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[first_crash_type_id]"
+                          dataType="i4"
+                          name="first_crash_type_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[crash_type_id]"
+                          dataType="i4"
+                          name="crash_type_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[control_device_id]"
+                          dataType="i4"
+                          name="control_device_id" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_total]"
                           dataType="r8"
-                          name="InjuriesTotal" />
+                          name="injuries_total" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesFatal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_incapacitating]"
                           dataType="r8"
-                          name="InjuriesFatal" />
+                          name="injuries_incapacitating" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_non_incapacitating]"
                           dataType="r8"
-                          name="InjuriesIncapacitating" />
+                          name="injuries_non_incapacitating" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[InjuriesNonIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[injuries_fatal]"
                           dataType="r8"
-                          name="InjuriesNonIncapacitating" />
+                          name="injuries_fatal" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[DameLevel]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[damage_level]"
                           codePage="1252"
                           dataType="str"
                           length="50"
-                          name="DameLevel" />
+                          name="damage_level" />
                         <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[NumberUnits]"
-                          dataType="i4"
-                          name="NumberUnits" />
-                        <externalMetadataColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[MostSevereInjury]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[most_severe_injury]"
                           codePage="1252"
                           dataType="str"
                           length="50"
-                          name="MostSevereInjury" />
+                          name="most_severe_injury" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output].ExternalColumns[number_units]"
+                          dataType="i4"
+                          name="number_units" />
                       </externalMetadataColumns>
                     </output>
                     <output
@@ -2293,49 +2558,50 @@ FROM Traffic_Source.dbo.crash_event</property>
                       name="OLE DB Source Error Output">
                       <outputColumns>
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[CrashID]"
-                          dataType="i4"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[CrashID]"
-                          name="CrashID" />
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[crash_date]"
+                          dataType="dbTimeStamp2"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[crash_date]"
+                          name="crash_date"
+                          scale="7" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesTotal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_total]"
                           dataType="r8"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesTotal]"
-                          name="InjuriesTotal" />
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_total]"
+                          name="injuries_total" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesFatal]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_incapacitating]"
                           dataType="r8"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesFatal]"
-                          name="InjuriesFatal" />
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_incapacitating]"
+                          name="injuries_incapacitating" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_non_incapacitating]"
                           dataType="r8"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesIncapacitating]"
-                          name="InjuriesIncapacitating" />
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_non_incapacitating]"
+                          name="injuries_non_incapacitating" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesNonIncapacitating]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_fatal]"
                           dataType="r8"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[InjuriesNonIncapacitating]"
-                          name="InjuriesNonIncapacitating" />
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[injuries_fatal]"
+                          name="injuries_fatal" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[DameLevel]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[damage_level]"
                           codePage="1252"
                           dataType="str"
                           length="50"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[DameLevel]"
-                          name="DameLevel" />
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[damage_level]"
+                          name="damage_level" />
                         <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[NumberUnits]"
-                          dataType="i4"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[NumberUnits]"
-                          name="NumberUnits" />
-                        <outputColumn
-                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[MostSevereInjury]"
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[most_severe_injury]"
                           codePage="1252"
                           dataType="str"
                           length="50"
-                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[MostSevereInjury]"
-                          name="MostSevereInjury" />
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[most_severe_injury]"
+                          name="most_severe_injury" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[number_units]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[number_units]"
+                          name="number_units" />
                         <outputColumn
                           refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
@@ -2348,6 +2614,16 @@ FROM Traffic_Source.dbo.crash_event</property>
                           lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
                           name="ErrorColumn"
                           specialFlags="2" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[first_crash_type_id]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[first_crash_type_id]"
+                          name="first_crash_type_id" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[crash_id]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Error Output].Columns[crash_id]"
+                          name="crash_id" />
                       </outputColumns>
                       <externalMetadataColumns />
                     </output>
@@ -2356,8 +2632,13 @@ FROM Traffic_Source.dbo.crash_event</property>
               </components>
               <paths>
                 <path
+                  refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage.Paths[Lookup Match Output]"
+                  endId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Lookup Match Output"
+                  startId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Outputs[Lookup Match Output]" />
+                <path
                   refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage.Paths[OLE DB Source Output]"
-                  endId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime.Inputs[OLE DB Destination Input]"
+                  endId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup.Inputs[Lookup Input]"
                   name="OLE DB Source Output"
                   startId="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime.Outputs[OLE DB Source Output]" />
               </paths>
@@ -2467,6 +2748,10 @@ FROM Traffic_Source.dbo.crash_event</property>
                           dataType="str"
                           length="60"
                           name="Lighting" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\DST_stg_DimLighting.Inputs[OLE DB Destination Input].ExternalColumns[LightingID]"
+                          dataType="i4"
+                          name="LightingID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -2739,6 +3024,10 @@ FROM Traffic_Source.dbo.crash_event</property>
                           dataType="str"
                           length="50"
                           name="RoadWayDefect" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\DST_stg_DimRoadWayDefect.Inputs[OLE DB Destination Input].ExternalColumns[RoadWayDefectID]"
+                          dataType="i4"
+                          name="RoadWayDefectID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -3011,6 +3300,10 @@ FROM Traffic_Source.dbo.crash_event</property>
                           dataType="str"
                           length="50"
                           name="RoadWaySurface" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\DST_stg_DimRoadWaySurface.Inputs[OLE DB Destination Input].ExternalColumns[RoadWaySurfaceID]"
+                          dataType="i4"
+                          name="RoadWaySurfaceID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -3283,6 +3576,10 @@ FROM Traffic_Source.dbo.crash_event</property>
                           dataType="str"
                           length="100"
                           name="TrafficControlDevice" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\DST_stg_DimTrafficControlDevice.Inputs[OLE DB Destination Input].ExternalColumns[ControlDeviceID]"
+                          dataType="i4"
+                          name="ControlDeviceID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -3555,6 +3852,10 @@ FROM Traffic_Source.dbo.crash_event</property>
                           dataType="str"
                           length="100"
                           name="TrafficWayType" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\DST_stg_DimTrafficWayType.Inputs[OLE DB Destination Input].ExternalColumns[TrafficWayTypeID]"
+                          dataType="i4"
+                          name="TrafficWayTypeID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -3827,6 +4128,10 @@ FROM Traffic_Source.dbo.crash_event</property>
                           dataType="str"
                           length="50"
                           name="Weather" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\DST_stg_DimWeather.Inputs[OLE DB Destination Input].ExternalColumns[WeatherID]"
+                          dataType="i4"
+                          name="WeatherID" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -4039,33 +4344,33 @@ FROM Traffic_Source.dbo.crash_event</property>
       <GraphLayout
         Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
+          Size="211.2,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage"
+          TopLeft="25.3581641469402,260.002940884055" />
+        <NodeLayout
           Size="250.4,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage"
           TopLeft="21.5714286056404,12.2882351704483" />
-        <NodeLayout
-          Size="201.6,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage"
-          TopLeft="23.6500008115812,73.626470463393" />
-        <NodeLayout
-          Size="204,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage"
-          TopLeft="26.3785723123776,137.649999814831" />
-        <NodeLayout
-          Size="259.2,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage"
-          TopLeft="23.7000008781041,199.782352701546" />
-        <NodeLayout
-          Size="211.2,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage"
-          TopLeft="26.3785723123777,260.002940884055" />
         <NodeLayout
           Size="213.6,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage"
           TopLeft="32.6285723256823,325.00294082708" />
         <NodeLayout
-          Size="237.6,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage"
-          TopLeft="32.6285723256823,392.194117263315" />
+          Size="204.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage"
+          TopLeft="334.261226029004,14.8873948804206" />
+        <NodeLayout
+          Size="212,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage"
+          TopLeft="337.730613791491,152.685714090371" />
+        <NodeLayout
+          Size="207.2,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage"
+          TopLeft="335.689797460616,74.030251974442" />
+        <NodeLayout
+          Size="201.6,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage"
+          TopLeft="23.6500008115812,73.626470463393" />
         <NodeLayout
           Size="239.2,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage"
@@ -4075,17 +4380,17 @@ FROM Traffic_Source.dbo.crash_event</property>
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage"
           TopLeft="21.4040825058699,522.870587712464" />
         <NodeLayout
-          Size="204.8,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage"
-          TopLeft="335.689797460616,14.8873948804206" />
+          Size="259.2,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage"
+          TopLeft="23.7000008781041,199.782352701546" />
         <NodeLayout
-          Size="207.2,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage"
-          TopLeft="335.689797460616,74.030251974442" />
+          Size="237.6,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage"
+          TopLeft="32.6285723256823,392.194117263315" />
         <NodeLayout
-          Size="212,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage"
-          TopLeft="337.730613791491,152.685714090371" />
+          Size="204,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage"
+          TopLeft="26.3785723123776,137.649999814831" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
@@ -4110,17 +4415,17 @@ FROM Traffic_Source.dbo.crash_event</property>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="59.6821431945097,0" />
+                    End="59.6821431945095,0" />
                   <mssgle:CubicBezierSegment
-                    Point1="59.6821431945097,0"
-                    Point2="63.6821431945097,0"
-                    Point3="63.6821431945097,4" />
+                    Point1="59.6821431945095,0"
+                    Point2="63.6821431945095,0"
+                    Point3="63.6821431945095,4" />
                   <mssgle:LineSegment
-                    End="63.6821431945097,166.679411857374" />
+                    End="63.6821431945095,166.679411857374" />
                   <mssgle:CubicBezierSegment
-                    Point1="63.6821431945097,166.679411857374"
-                    Point2="63.6821431945097,170.679411857374"
-                    Point3="67.6821431945097,170.679411857374" />
+                    Point1="63.6821431945095,166.679411857374"
+                    Point2="63.6821431945095,170.679411857374"
+                    Point3="67.6821431945095,170.679411857374" />
                   <mssgle:LineSegment
                     End="119.864286389019,170.679411857374" />
                 </mssgle:SegmentCollection>
@@ -4135,18 +4440,96 @@ FROM Traffic_Source.dbo.crash_event</property>
     </LayoutInfo>
   </Package>
   <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="189.6,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\DST_stg_DimAlignment"
+          TopLeft="553.999991744757,185.999997228384" />
+        <NodeLayout
+          Size="150.4,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\SRC_Alignment"
+          TopLeft="542.999991908669,83.9999987483025" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage.Paths[OLE DB Source Output]"
+          TopLeft="618.199991908669,125.599998748303">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="30.5999998360879,60.3999984800815"
+              Start="0,0"
+              End="30.5999998360879,52.8999984800815">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.1999992400407" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26.1999992400407"
+                    Point2="0,30.1999992400407"
+                    Point3="4,30.1999992400407" />
+                  <mssgle:LineSegment
+                    End="26.5999998360879,30.1999992400407" />
+                  <mssgle:CubicBezierSegment
+                    Point1="26.5999998360879,30.1999992400407"
+                    Point2="30.5999998360879,30.1999992400407"
+                    Point3="30.5999998360879,34.1999992400407" />
+                  <mssgle:LineSegment
+                    End="30.5999998360879,52.8999984800815" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\DST_stg_DimAlignment">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\SRC_Alignment">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="189.6,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\SRC_ContributoryCause"
-          TopLeft="272.142857722178,36.705882320767" />
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="196,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\DEST_ContributoryCause"
           TopLeft="272.142857722178,187.352941012248" />
+        <NodeLayout
+          Size="189.6,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\SRC_ContributoryCause"
+          TopLeft="272.142857722178,36.705882320767" />
         <EdgeLayout
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage.Paths[OLE DB Source Output]"
           TopLeft="368.542857722178,78.305882320767">
@@ -4166,25 +4549,14 @@ FROM Traffic_Source.dbo.crash_event</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\SRC_ContributoryCause">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\DEST_ContributoryCause">
     <Properties>
@@ -4198,275 +4570,8 @@ FROM Traffic_Source.dbo.crash_event</property>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="140.8,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\SRC_Lighting"
-          TopLeft="569.999991506338,108.999998375773" />
-        <NodeLayout
-          Size="180,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\DST_stg_DimLighting"
-          TopLeft="554.999991729856,205.999996930361" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage.Paths[OLE DB Source Output]"
-          TopLeft="642.699991618097,150.599998375773">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,55.3999985545873"
-              Start="0,0"
-              End="0,47.8999985545873">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,47.8999985545873" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\SRC_Lighting">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\DST_stg_DimLighting">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="143.2,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\SRC_Weather"
-          TopLeft="441.999993413687,111.99999833107" />
-        <NodeLayout
-          Size="182.4,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\DST_stg_DimWeather"
-          TopLeft="423.999993681908,225.999996632338" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage.Paths[OLE DB Source Output]"
-          TopLeft="514.399993547798,153.59999833107">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,72.3999983012677"
-              Start="0,0"
-              End="0,64.8999983012677">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,64.8999983012677" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\SRC_Weather">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\DST_stg_DimWeather">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="197.6,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\SRC_TrafficControlDevice"
-          TopLeft="467.999993026257,82.9999987632036" />
-        <NodeLayout
-          Size="236.8,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\DST_stg_DimTrafficControlDevice"
-          TopLeft="462.999993100763,194.999997094274" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage.Paths[OLE DB Source Output]"
-          TopLeft="566.799993026257,124.599998763204">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="14.6000000745059,70.39999833107"
-              Start="0,0"
-              End="14.6000000745059,62.89999833107">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,31.199999165535" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,31.199999165535"
-                    Point2="0,35.199999165535"
-                    Point3="4,35.199999165535" />
-                  <mssgle:LineSegment
-                    End="10.6000000745059,35.199999165535" />
-                  <mssgle:CubicBezierSegment
-                    Point1="10.6000000745059,35.199999165535"
-                    Point2="14.6000000745059,35.199999165535"
-                    Point3="14.6000000745059,39.199999165535" />
-                  <mssgle:LineSegment
-                    End="14.6000000745059,62.89999833107" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\SRC_TrafficControlDevice">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\DST_stg_DimTrafficControlDevice">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="150.4,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\SRC_Alignment"
-          TopLeft="542.999991908669,83.9999987483025" />
-        <NodeLayout
-          Size="189.6,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\DST_stg_DimAlignment"
-          TopLeft="553.999991744757,185.999997228384" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage.Paths[OLE DB Source Output]"
-          TopLeft="618.199991908669,125.599998748302">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="30.5999998360875,60.3999984800816"
-              Start="0,0"
-              End="30.5999998360875,52.8999984800816">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,26.1999992400408" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,26.1999992400408"
-                    Point2="0,30.1999992400408"
-                    Point3="4,30.1999992400408" />
-                  <mssgle:LineSegment
-                    End="26.5999998360875,30.1999992400408" />
-                  <mssgle:CubicBezierSegment
-                    Point1="26.5999998360875,30.1999992400408"
-                    Point2="30.5999998360875,30.1999992400408"
-                    Point3="30.5999998360875,34.1999992400408" />
-                  <mssgle:LineSegment
-                    End="30.5999998360875,52.8999984800816" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\SRC_Alignment">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Alignment_Stage\DST_stg_DimAlignment">
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_ContributoryCause_Stage\SRC_ContributoryCause">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -4484,13 +4589,13 @@ FROM Traffic_Source.dbo.crash_event</property>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="152.8,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\SRC_CrashType"
-          TopLeft="571.999991476536,135.999997973442" />
-        <NodeLayout
           Size="192,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\DST_stg_DimCrashType"
           TopLeft="565.999991565943,226.999996617436" />
+        <NodeLayout
+          Size="152.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\SRC_CrashType"
+          TopLeft="571.999991476536,135.999997973442" />
         <EdgeLayout
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage.Paths[OLE DB Source Output]"
           TopLeft="648.399991476536,177.599997973442">
@@ -4529,19 +4634,6 @@ FROM Traffic_Source.dbo.crash_event</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\SRC_CrashType">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\DST_stg_DimCrashType">
     <Properties>
       <Property>
@@ -4554,211 +4646,8 @@ FROM Traffic_Source.dbo.crash_event</property>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="176.8,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\SRC_TrafficWayType"
-          TopLeft="587.999991238117,79.9999988079071" />
-        <NodeLayout
-          Size="216,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\DST_stg_DimTrafficWayType"
-          TopLeft="568.999991521239,193.999997109175" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage.Paths[OLE DB Source Output]"
-          TopLeft="676.699991379678,121.599998807907">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,72.3999983012676"
-              Start="0,0"
-              End="0,64.8999983012676">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,64.8999983012676" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\SRC_TrafficWayType">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\DST_stg_DimTrafficWayType">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="177.6,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\SRC_RoadWayDefect"
-          TopLeft="563.999991595745,82.9999987632036" />
-        <NodeLayout
-          Size="216.8,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\DST_stg_DimRoadWayDefect"
-          TopLeft="558.499991759658,233.499996602535" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage.Paths[OLE DB Source Output]"
-          TopLeft="652.799991595745,124.599998763204">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="14.1000001639127,108.899997839332"
-              Start="0,0"
-              End="14.1000001639127,101.399997839332">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,50.4499989196658" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,50.4499989196658"
-                    Point2="0,54.4499989196658"
-                    Point3="4,54.4499989196658" />
-                  <mssgle:LineSegment
-                    End="10.1000001639127,54.4499989196658" />
-                  <mssgle:CubicBezierSegment
-                    Point1="10.1000001639127,54.4499989196658"
-                    Point2="14.1000001639127,54.4499989196658"
-                    Point3="14.1000001639127,58.4499989196658" />
-                  <mssgle:LineSegment
-                    End="14.1000001639127,101.399997839332" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\SRC_RoadWayDefect">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\DST_stg_DimRoadWayDefect">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="183.2,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\SRC_RoadWaySurface"
-          TopLeft="505.999992460012,94.9999985843897" />
-        <NodeLayout
-          Size="222.4,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\DST_stg_DimRoadWaySurface"
-          TopLeft="503.999992489815,203.999996960163" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage.Paths[OLE DB Source Output]"
-          TopLeft="597.599992460012,136.59999858439">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="17.6000000298026,67.3999983757735"
-              Start="0,0"
-              End="17.6000000298026,59.8999983757735">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,29.6999991878867" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,29.6999991878867"
-                    Point2="0,33.6999991878867"
-                    Point3="4,33.6999991878867" />
-                  <mssgle:LineSegment
-                    End="13.6000000298026,33.6999991878867" />
-                  <mssgle:CubicBezierSegment
-                    Point1="13.6000000298026,33.6999991878867"
-                    Point2="17.6000000298026,33.6999991878867"
-                    Point3="17.6000000298026,37.6999991878867" />
-                  <mssgle:LineSegment
-                    End="17.6000000298026,59.8999983757735" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\SRC_RoadWaySurface">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\DST_stg_DimRoadWaySurface">
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_CrashType_Stage\SRC_CrashType">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -4776,10 +4665,6 @@ FROM Traffic_Source.dbo.crash_event</property>
       <GraphLayout
         Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="178.4,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate"
-          TopLeft="496.999992594123,66.9999990016222" />
-        <NodeLayout
           Size="164,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate"
           TopLeft="505.999992460013,305.999995440245" />
@@ -4787,6 +4672,10 @@ FROM Traffic_Source.dbo.crash_event</property>
           Size="180,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\CONV_ToNonUnicode"
           TopLeft="511.999992370606,182.999997273088" />
+        <NodeLayout
+          Size="178.4,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate"
+          TopLeft="496.999992594123,66.9999990016222" />
         <EdgeLayout
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage.Paths[OLE DB Source Output]"
           TopLeft="586.199992594123,108.599999001622">
@@ -4859,6 +4748,19 @@ FROM Traffic_Source.dbo.crash_event</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate">
     <Properties>
       <Property>
@@ -4866,8 +4768,71 @@ FROM Traffic_Source.dbo.crash_event</property>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="151.2,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause"
+          TopLeft="397.285704777253,90.294115422145" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination"
+          TopLeft="406.285704643143,184.294114021436" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage.Paths[OLE DB Source Output]"
+          TopLeft="472.885704777253,131.894115422145">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="18.59999986589,52.399998599291"
+              Start="0,0"
+              End="18.59999986589,44.899998599291">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.1999992996455" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.1999992996455"
+                    Point2="0,26.1999992996455"
+                    Point3="4,26.1999992996455" />
+                  <mssgle:LineSegment
+                    End="14.59999986589,26.1999992996455" />
+                  <mssgle:CubicBezierSegment
+                    Point1="14.59999986589,26.1999992996455"
+                    Point2="18.59999986589,26.1999992996455"
+                    Point3="18.59999986589,30.1999992996455" />
+                  <mssgle:LineSegment
+                    End="18.59999986589,44.899998599291" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate">
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -4883,41 +4848,41 @@ FROM Traffic_Source.dbo.crash_event</property>
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="146.4,41.6"
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime"
-          TopLeft="484.999992772937,42.9999993592501" />
+          TopLeft="484.999992772937,40.9999993890524" />
         <NodeLayout
-          Size="166.4,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime"
-          TopLeft="454.999993219972,163.99999755621" />
+          Size="112.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup"
+          TopLeft="325.999995142222,142.999997869134" />
         <EdgeLayout
           Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage.Paths[OLE DB Source Output]"
-          TopLeft="558.199992772937,84.5999993592501">
+          TopLeft="558.199992772937,82.5999993890524">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-19.9999995529653,79.3999981969595"
+              EndConnector="-175.799997630715,60.3999984800815"
               Start="0,0"
-              End="-19.9999995529653,71.8999981969595">
+              End="-175.799997630715,52.8999984800815">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,35.6999990984798" />
+                    End="0,26.1999992400408" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,35.6999990984798"
-                    Point2="0,39.6999990984798"
-                    Point3="-4,39.6999990984798" />
+                    Point1="0,26.1999992400408"
+                    Point2="0,30.1999992400408"
+                    Point3="-4,30.1999992400408" />
                   <mssgle:LineSegment
-                    End="-15.9999995529653,39.6999990984798" />
+                    End="-171.799997630715,30.1999992400408" />
                   <mssgle:CubicBezierSegment
-                    Point1="-15.9999995529653,39.6999990984798"
-                    Point2="-19.9999995529653,39.6999990984798"
-                    Point3="-19.9999995529653,43.6999990984798" />
+                    Point1="-171.799997630715,30.1999992400408"
+                    Point2="-175.799997630715,30.1999992400408"
+                    Point3="-175.799997630715,34.1999992400408" />
                   <mssgle:LineSegment
-                    End="-19.9999995529653,71.8999981969595" />
+                    End="-175.799997630715,52.8999984800815" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -4926,19 +4891,51 @@ FROM Traffic_Source.dbo.crash_event</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination"
+          TopLeft="584.999991282821,243.999996364117" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage.Paths[Lookup Match Output]"
+          TopLeft="382.399995142222,184.599997869134">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="287.799996140599,59.3999984949827"
+              Start="0,0"
+              End="287.799996140599,51.8999984949827">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.6999992474913" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,25.6999992474913"
+                    Point2="0,29.6999992474913"
+                    Point3="4,29.6999992474913" />
+                  <mssgle:LineSegment
+                    End="283.799996140599,29.6999992474913" />
+                  <mssgle:CubicBezierSegment
+                    Point1="283.799996140599,29.6999992474913"
+                    Point2="287.799996140599,29.6999992474913"
+                    Point3="287.799996140599,33.6999992474913" />
+                  <mssgle:LineSegment
+                    End="287.799996140599,51.8999984949827" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="95.7086113515496,34.6999992474913,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\DST_stg_FactTime">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -4951,44 +4948,188 @@ FROM Traffic_Source.dbo.crash_event</property>
     </Properties>
   </PipelineComponentMetadata>
   <TaskHost
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage">
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="151.2,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause"
-          TopLeft="607.999990940094,152.999997720122" />
+          Size="180,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\DST_stg_DimLighting"
+          TopLeft="553.999991744757,205.999996930361" />
         <NodeLayout
-          Size="170.4,41.6"
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination"
-          TopLeft="616.999990805984,246.999996319413" />
+          Size="140.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\SRC_Lighting"
+          TopLeft="569.999991506338,108.999998375773" />
         <EdgeLayout
-          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage.Paths[OLE DB Source Output]"
-          TopLeft="683.599990940094,194.599997720122">
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage.Paths[OLE DB Source Output]"
+          TopLeft="642.199991625548,150.599998375773">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="18.5999998658896,52.3999985992909"
+              EndConnector="0,55.399998554588"
               Start="0,0"
-              End="18.5999998658896,44.8999985992909">
+              End="0,47.899998554588">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,22.1999992996454" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,22.1999992996454"
-                    Point2="0,26.1999992996454"
-                    Point3="4,26.1999992996454" />
+                    End="0,47.899998554588" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\DST_stg_DimLighting">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Lighting_Stage\SRC_Lighting">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="216.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\DST_stg_DimRoadWayDefect"
+          TopLeft="558.499991759658,233.499996602535" />
+        <NodeLayout
+          Size="177.6,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\SRC_RoadWayDefect"
+          TopLeft="563.999991595745,82.9999987632036" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage.Paths[OLE DB Source Output]"
+          TopLeft="652.799991595745,124.599998763204">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="14.1000001639127,108.899997839332"
+              Start="0,0"
+              End="14.1000001639127,101.399997839332">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
                   <mssgle:LineSegment
-                    End="14.5999998658896,26.1999992996454" />
+                    End="0,50.4499989196658" />
                   <mssgle:CubicBezierSegment
-                    Point1="14.5999998658896,26.1999992996454"
-                    Point2="18.5999998658896,26.1999992996454"
-                    Point3="18.5999998658896,30.1999992996454" />
+                    Point1="0,50.4499989196658"
+                    Point2="0,54.4499989196658"
+                    Point3="4,54.4499989196658" />
                   <mssgle:LineSegment
-                    End="18.5999998658896,44.8999985992909" />
+                    End="10.1000001639127,54.4499989196658" />
+                  <mssgle:CubicBezierSegment
+                    Point1="10.1000001639127,54.4499989196658"
+                    Point2="14.1000001639127,54.4499989196658"
+                    Point3="14.1000001639127,58.4499989196658" />
+                  <mssgle:LineSegment
+                    End="14.1000001639127,101.399997839332" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\DST_stg_DimRoadWayDefect">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWayDefect_Stage\SRC_RoadWayDefect">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="222.4,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\DST_stg_DimRoadWaySurface"
+          TopLeft="503.999992489815,203.999996960163" />
+        <NodeLayout
+          Size="183.2,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\SRC_RoadWaySurface"
+          TopLeft="505.999992460012,94.9999985843897" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage.Paths[OLE DB Source Output]"
+          TopLeft="597.599992460012,136.59999858439">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="17.6000000298026,67.3999983757735"
+              Start="0,0"
+              End="17.6000000298026,59.8999983757735">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.6999991878867" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,29.6999991878867"
+                    Point2="0,33.6999991878867"
+                    Point3="4,33.6999991878867" />
+                  <mssgle:LineSegment
+                    End="13.6000000298026,33.6999991878867" />
+                  <mssgle:CubicBezierSegment
+                    Point1="13.6000000298026,33.6999991878867"
+                    Point2="17.6000000298026,33.6999991878867"
+                    Point3="17.6000000298026,37.6999991878867" />
+                  <mssgle:LineSegment
+                    End="17.6000000298026,59.8999983757735" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5001,15 +5142,264 @@ FROM Traffic_Source.dbo.crash_event</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\SRC_FactCause">
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\DST_stg_DimRoadWaySurface">
     <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_RoadWaySurface_Stage\SRC_RoadWaySurface">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="236.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\DST_stg_DimTrafficControlDevice"
+          TopLeft="462.999993100763,194.999997094274" />
+        <NodeLayout
+          Size="197.6,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\SRC_TrafficControlDevice"
+          TopLeft="467.999993026257,82.9999987632036" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage.Paths[OLE DB Source Output]"
+          TopLeft="566.799993026257,124.599998763204">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="14.6000000745059,70.39999833107"
+              Start="0,0"
+              End="14.6000000745059,62.89999833107">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.199999165535" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,31.199999165535"
+                    Point2="0,35.199999165535"
+                    Point3="4,35.199999165535" />
+                  <mssgle:LineSegment
+                    End="10.6000000745059,35.199999165535" />
+                  <mssgle:CubicBezierSegment
+                    Point1="10.6000000745059,35.199999165535"
+                    Point2="14.6000000745059,35.199999165535"
+                    Point3="14.6000000745059,39.199999165535" />
+                  <mssgle:LineSegment
+                    End="14.6000000745059,62.89999833107" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\DST_stg_DimTrafficControlDevice">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficControlDevice_Stage\SRC_TrafficControlDevice">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="216,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\DST_stg_DimTrafficWayType"
+          TopLeft="568.999991521239,193.999997109175" />
+        <NodeLayout
+          Size="176.8,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\SRC_TrafficWayType"
+          TopLeft="587.999991238117,79.9999988079071" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage.Paths[OLE DB Source Output]"
+          TopLeft="676.699991379678,121.599998807907">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.3999983012676"
+              Start="0,0"
+              End="0,64.8999983012676">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.8999983012676" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\DST_stg_DimTrafficWayType">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_TrafficWayType_Stage\SRC_TrafficWayType">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="182.4,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\DST_stg_DimWeather"
+          TopLeft="423.999993681908,225.999996632338" />
+        <NodeLayout
+          Size="143.2,41.6"
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\SRC_Weather"
+          TopLeft="441.999993413687,111.99999833107" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage.Paths[OLE DB Source Output]"
+          TopLeft="514.399993547798,153.59999833107">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.3999983012677"
+              Start="0,0"
+              End="0,64.8999983012677">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.8999983012677" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\DST_stg_DimWeather">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\SRC_Weather">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[first_crash_type]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
       <Property>
         <Name>DataSourceViewID</Name>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactCause_Stage\OLE DB Destination">
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>

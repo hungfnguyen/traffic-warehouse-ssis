@@ -11,8 +11,8 @@
   DTS:LocaleID="1066"
   DTS:ObjectName="02_load_dataset_to_source_tables"
   DTS:PackageType="5"
-  DTS:VersionBuild="45"
-  DTS:VersionGUID="{3AB31957-0272-42BB-9F80-46D29DD1B6E7}">
+  DTS:VersionBuild="46"
+  DTS:VersionGUID="{0D84A953-AB97-4629-8B5C-ED35C10B4DC2}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -2777,21 +2777,6 @@ where [refTable].[weather] = ?</property>
       DTS:ObjectName="SEQ_Load_SourceTables">
       <DTS:Variables />
       <DTS:Executables>
-        <DTS:Executable
-          DTS:refId="Package\SEQ_Load_SourceTables\Data Flow Task"
-          DTS:CreationName="Microsoft.Pipeline"
-          DTS:Description="Data Flow Task"
-          DTS:DTSID="{DF9D4737-172A-4246-96E8-00E46785E0CF}"
-          DTS:ExecutableType="Microsoft.Pipeline"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Data Flow Task"
-          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <pipeline
-              version="1" />
-          </DTS:ObjectData>
-        </DTS:Executable>
         <DTS:Executable
           DTS:refId="Package\SEQ_Load_SourceTables\DFT_Load_Alignment"
           DTS:CreationName="Microsoft.Pipeline"
@@ -6206,17 +6191,17 @@ WHERE weather_condition IS NOT NULL</property>
       <GraphLayout
         Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="226.4,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_TrafficControlDevice"
-          TopLeft="5.5,5.5" />
+          Size="250.4,41.6"
+          Id="Package\DELETE_and_RESEED_SourceTables"
+          TopLeft="51.0204082718743,192.268907394494" />
         <NodeLayout
-          Size="171.2,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Weather"
-          TopLeft="5.68571551886134,56.1764703636867" />
+          Size="184.8,41.6"
+          Id="Package\DFT_Load_CrashEvent"
+          TopLeft="990.701022608094,195.694957752756" />
         <NodeLayout
-          Size="150.4,41.6"
-          Id="Package\SEQ_Load_SourceTables\Data Flow Task"
-          TopLeft="9.35204082452691,102.317646814166" />
+          Size="179.2,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment"
+          TopLeft="254.151022223021,186.076470432057" />
         <NodeLayout
           Size="218.4,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause"
@@ -6225,10 +6210,6 @@ WHERE weather_condition IS NOT NULL</property>
           Size="181.6,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_CrashType"
           TopLeft="14.0204081814029,222.361764359507" />
-        <NodeLayout
-          Size="179.2,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment"
-          TopLeft="254.151022223021,186.076470432057" />
         <NodeLayout
           Size="201.6,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_FirstCrashType"
@@ -6246,9 +6227,17 @@ WHERE weather_condition IS NOT NULL</property>
           Id="Package\SEQ_Load_SourceTables\DFT_Load_RoadwaySurface"
           TopLeft="257.518369168964,245.160504004231" />
         <NodeLayout
+          Size="226.4,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_TrafficControlDevice"
+          TopLeft="5.5,5.5" />
+        <NodeLayout
           Size="204.8,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_TrafficWayType"
           TopLeft="251.702042625971,131.856302411655" />
+        <NodeLayout
+          Size="171.2,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Weather"
+          TopLeft="5.68571551886134,56.1764703636867" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
@@ -6256,10 +6245,6 @@ WHERE weather_condition IS NOT NULL</property>
           Size="492.8,445.6"
           Id="Package\SEQ_Load_SourceTables"
           TopLeft="399.59183758532,7.95798319682015" />
-        <NodeLayout
-          Size="184.8,41.6"
-          Id="Package\DFT_Load_CrashEvent"
-          TopLeft="990.701022608094,195.694957752756" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
           TopLeft="892.39183758532,230.75798319682">
@@ -6294,10 +6279,6 @@ WHERE weather_condition IS NOT NULL</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="250.4,41.6"
-          Id="Package\DELETE_and_RESEED_SourceTables"
-          TopLeft="51.0204082718743,192.268907394494" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
           TopLeft="301.420408271874,213.068907394494">
@@ -6335,196 +6316,6 @@ WHERE weather_condition IS NOT NULL</property>
       </GraphLayout>
     </LayoutInfo>
   </Package>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Alignment">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
-        <NodeLayout
-          Size="155.2,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\Sort - Alignment"
-          TopLeft="199.999997019768,186.999997213483" />
-        <NodeLayout
-          Size="157.6,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\Dest - Alignment"
-          TopLeft="204.999996945262,308.999995395541" />
-        <NodeLayout
-          Size="149.6,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\OLE DB Source"
-          TopLeft="207.999996900559,47.9999992847443" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment.Paths[Sort Output]"
-          TopLeft="280.699996982515,228.599997213483">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,80.3999981820584"
-              Start="0,0"
-              End="0,72.8999981820584">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,72.8999981820584" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment.Paths[OLE DB Source Output]"
-          TopLeft="280.199996960163,89.5999992847443">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,97.3999979287386"
-              Start="0,0"
-              End="0,89.8999979287386">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,89.8999979287386" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\Dest - Alignment">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
-        <NodeLayout
-          Size="194.4,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\Sort - ContributoryCause"
-          TopLeft="530.999992087484,191.999997138977" />
-        <NodeLayout
-          Size="196.8,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\Dest - ContributoryCause"
-          TopLeft="530.999992087484,279.999995827675" />
-        <NodeLayout
-          Size="149.6,41.6"
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\OLE DB Source"
-          TopLeft="531.999992072582,92.999998614192" />
-        <EdgeLayout
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause.Paths[Sort Output]"
-          TopLeft="628.799992087484,233.599997138977">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,46.3999986886978"
-              Start="0,0"
-              End="0,38.8999986886978">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,38.8999986886978" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause.Paths[OLE DB Source Output]"
-          TopLeft="606.799992072582,134.599998614192">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="21.4000000149014,57.3999985247851"
-              Start="0,0"
-              End="21.4000000149014,49.8999985247851">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,24.6999992623925" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,24.6999992623925"
-                    Point2="0,28.6999992623925"
-                    Point3="4,28.6999992623925" />
-                  <mssgle:LineSegment
-                    End="17.4000000149014,28.6999992623925" />
-                  <mssgle:CubicBezierSegment
-                    Point1="17.4000000149014,28.6999992623925"
-                    Point2="21.4000000149014,28.6999992623925"
-                    Point3="21.4000000149014,32.6999992623925" />
-                  <mssgle:LineSegment
-                    End="21.4000000149014,49.8999985247851" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\Dest - ContributoryCause">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\DFT_Load_CrashEvent">
     <LayoutInfo>
@@ -7196,10 +6987,192 @@ WHERE weather_condition IS NOT NULL</property>
     </Properties>
   </PipelineComponentMetadata>
   <TaskHost
+    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Alignment">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="155.2,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\Sort - Alignment"
+          TopLeft="199.999997019768,186.999997213483" />
+        <NodeLayout
+          Size="157.6,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\Dest - Alignment"
+          TopLeft="204.999996945262,308.999995395541" />
+        <NodeLayout
+          Size="149.6,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\OLE DB Source"
+          TopLeft="207.999996900559,47.9999992847443" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment.Paths[Sort Output]"
+          TopLeft="280.699996982515,228.599997213483">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,80.3999981820584"
+              Start="0,0"
+              End="0,72.8999981820584">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,72.8999981820584" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_Alignment.Paths[OLE DB Source Output]"
+          TopLeft="280.199996960163,89.5999992847443">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,97.3999979287386"
+              Start="0,0"
+              End="0,89.8999979287386">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,89.8999979287386" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\Dest - Alignment">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Alignment\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="194.4,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\Sort - ContributoryCause"
+          TopLeft="530.999992087484,191.999997138977" />
+        <NodeLayout
+          Size="196.8,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\Dest - ContributoryCause"
+          TopLeft="530.999992087484,279.999995827675" />
+        <NodeLayout
+          Size="149.6,41.6"
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\OLE DB Source"
+          TopLeft="531.999992072582,92.999998614192" />
+        <EdgeLayout
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause.Paths[Sort Output]"
+          TopLeft="628.799992087484,233.599997138977">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.3999986886978"
+              Start="0,0"
+              End="0,38.8999986886978">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.8999986886978" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause.Paths[OLE DB Source Output]"
+          TopLeft="606.799992072582,134.599998614192">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="21.4000000149014,57.3999985247851"
+              Start="0,0"
+              End="21.4000000149014,49.8999985247851">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.6999992623925" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,24.6999992623925"
+                    Point2="0,28.6999992623925"
+                    Point3="4,28.6999992623925" />
+                  <mssgle:LineSegment
+                    End="17.4000000149014,28.6999992623925" />
+                  <mssgle:CubicBezierSegment
+                    Point1="17.4000000149014,28.6999992623925"
+                    Point2="21.4000000149014,28.6999992623925"
+                    Point3="21.4000000149014,32.6999992623925" />
+                  <mssgle:LineSegment
+                    End="21.4000000149014,49.8999985247851" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\Dest - ContributoryCause">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_ContributoryCause\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_CrashType">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="157.6,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_CrashType\Sort - CrashType"
@@ -7231,9 +7204,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7255,9 +7226,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7288,7 +7257,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_FirstCrashType">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="177.6,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_FirstCrashType\Sort - FirstCrashType"
@@ -7332,9 +7301,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7356,9 +7323,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7389,7 +7354,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Lighting">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="145.6,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_Lighting\Sort - Lighting"
@@ -7433,9 +7398,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7469,9 +7432,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7502,7 +7463,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_RoadwayDefect">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="180.8,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_RoadwayDefect\Sort - RoadwayDefect"
@@ -7546,9 +7507,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7582,9 +7541,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7615,7 +7572,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_RoadwaySurface">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="186.4,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_RoadwaySurface\Sort - RoadwaySurface"
@@ -7647,9 +7604,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7683,9 +7638,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7716,7 +7669,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_TrafficControlDevice">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="203.2,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_TrafficControlDevice\Sort - TrafficControlDevice"
@@ -7748,9 +7701,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7772,9 +7723,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7805,7 +7754,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_TrafficWayType">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="181.6,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_TrafficWayType\Sort - TrafficWayType"
@@ -7849,9 +7798,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7885,9 +7832,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -7918,7 +7863,7 @@ WHERE weather_condition IS NOT NULL</property>
     design-time-name="Package\SEQ_Load_SourceTables\DFT_Load_Weather">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="148,41.6"
           Id="Package\SEQ_Load_SourceTables\DFT_Load_Weather\Sort - Weather"
@@ -7962,9 +7907,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -7986,9 +7929,7 @@ WHERE weather_condition IS NOT NULL</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
