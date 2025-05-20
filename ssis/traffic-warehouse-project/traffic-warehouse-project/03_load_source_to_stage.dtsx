@@ -11,8 +11,8 @@
   DTS:LocaleID="1066"
   DTS:ObjectName="03_load_source_to_stage"
   DTS:PackageType="5"
-  DTS:VersionBuild="52"
-  DTS:VersionGUID="{5015BFB8-B667-4B80-83E3-1AAB87DA05C1}">
+  DTS:VersionBuild="54"
+  DTS:VersionGUID="{0EAC22F1-6A0E-47C7-B9E7-FAA3D32416A8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -1064,6 +1064,12 @@
                           cachedName="CrashDayOfWeek_conv"
                           externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate.Inputs[OLE DB Destination Input].ExternalColumns[CrashDayOfWeek]"
                           lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\CONV_ToNonUnicode.Outputs[Data Conversion Output].Columns[CrashDayOfWeek_conv]" />
+                        <inputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate.Inputs[OLE DB Destination Input].Columns[CrashYear]"
+                          cachedDataType="i4"
+                          cachedName="CrashYear"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate.Inputs[OLE DB Destination Input].ExternalColumns[CrashYear]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].Columns[CrashYear]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -1098,6 +1104,10 @@
                           refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate.Inputs[OLE DB Destination Input].ExternalColumns[CrashMonth]"
                           dataType="i4"
                           name="CrashMonth" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\DST_stg_DimDate.Inputs[OLE DB Destination Input].ExternalColumns[CrashYear]"
+                          dataType="i4"
+                          name="CrashYear" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -1158,7 +1168,8 @@
     DATENAME(WEEKDAY, crash_date) AS CrashDayOfWeek,
     DATEPART(WEEKDAY, crash_date) AS CrashDayOfWeekNumber,
     DATEPART(DAY, crash_date) AS CrashDay,
-    DATEPART(MONTH, crash_date) AS CrashMonth
+    DATEPART(MONTH, crash_date) AS CrashMonth,
+    DATEPART(YEAR, crash_date) AS CrashYear
 FROM dbo.crash_event
 WHERE crash_date IS NOT NULL;</property>
                     <property
@@ -1261,6 +1272,15 @@ WHERE crash_date IS NOT NULL;</property>
                           lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].Columns[CrashMonth]"
                           name="CrashMonth"
                           truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].Columns[CrashYear]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].ExternalColumns[CrashYear]"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].Columns[CrashYear]"
+                          name="CrashYear"
+                          truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -1294,6 +1314,10 @@ WHERE crash_date IS NOT NULL;</property>
                           refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].ExternalColumns[CrashMonth]"
                           dataType="i4"
                           name="CrashMonth" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Output].ExternalColumns[CrashYear]"
+                          dataType="i4"
+                          name="CrashYear" />
                       </externalMetadataColumns>
                     </output>
                     <output
@@ -1338,6 +1362,11 @@ WHERE crash_date IS NOT NULL;</property>
                           dataType="i4"
                           lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Error Output].Columns[CrashMonth]"
                           name="CrashMonth" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Error Output].Columns[CrashYear]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Error Output].Columns[CrashYear]"
+                          name="CrashYear" />
                         <outputColumn
                           refId="Package\SEQ_Load_Source_to_Stage\DFT_Load_DimDate_Stage\SRC_CrashEventDate.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
@@ -4682,26 +4711,26 @@ FROM Traffic_Source.dbo.crash_event</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="15.7999997764828,74.3999982714653"
+              EndConnector="15.7999997764829,74.3999982714658"
               Start="0,0"
-              End="15.7999997764828,66.8999982714653">
+              End="15.7999997764829,66.8999982714658">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,33.1999991357326" />
+                    End="0,33.1999991357329" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,33.1999991357326"
-                    Point2="0,37.1999991357326"
-                    Point3="4,37.1999991357326" />
+                    Point1="0,33.1999991357329"
+                    Point2="0,37.1999991357329"
+                    Point3="4,37.1999991357329" />
                   <mssgle:LineSegment
-                    End="11.7999997764828,37.1999991357326" />
+                    End="11.7999997764829,37.1999991357329" />
                   <mssgle:CubicBezierSegment
-                    Point1="11.7999997764828,37.1999991357326"
-                    Point2="15.7999997764828,37.1999991357326"
-                    Point3="15.7999997764828,41.1999991357326" />
+                    Point1="11.7999997764829,37.1999991357329"
+                    Point2="15.7999997764829,37.1999991357329"
+                    Point3="15.7999997764829,41.1999991357329" />
                   <mssgle:LineSegment
-                    End="15.7999997764828,66.8999982714653" />
+                    End="15.7999997764829,66.8999982714658" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -4936,6 +4965,42 @@ FROM Traffic_Source.dbo.crash_event</property>
   </TaskHost>
   <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\SRC_FactTime">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[first_crash_type]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -5364,42 +5429,6 @@ FROM Traffic_Source.dbo.crash_event</property>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_Weather_Stage\SRC_Weather">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\Lookup">
-    <Properties>
-      <Property>
-        <Name>OverwriteParamsSQLProp</Name>
-        <Value
-          type="q2:boolean">false</Value>
-      </Property>
-      <Property>
-        <Name>UsedTableName</Name>
-        <Value
-          type="q3:string">[dbo].[first_crash_type]</Value>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q4:int">0</Value>
-      </Property>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Source_to_Stage\DFT_Load_FactTime_Stage\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>

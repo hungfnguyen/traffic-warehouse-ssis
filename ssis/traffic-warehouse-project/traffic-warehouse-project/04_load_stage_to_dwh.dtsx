@@ -11,8 +11,8 @@
   DTS:LocaleID="1066"
   DTS:ObjectName="04_load_stage_to_dwh"
   DTS:PackageType="5"
-  DTS:VersionBuild="103"
-  DTS:VersionGUID="{1B6EFE21-C668-4A78-934B-3279F3C6F3EC}">
+  DTS:VersionBuild="105"
+  DTS:VersionGUID="{12EE124D-3429-42FE-86E5-9FC5C8042BEE}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
@@ -3204,6 +3204,12 @@
                           cachedSortKeyPosition="1"
                           externalMetadataColumnId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DateKey]"
                           lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\Sort.Outputs[Sort Output].Columns[DateKey]" />
+                        <inputColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[CrashYear]"
+                          cachedDataType="i4"
+                          cachedName="CrashYear"
+                          externalMetadataColumnId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Year]"
+                          lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\Sort.Outputs[Sort Output].Columns[CrashYear]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -3264,6 +3270,10 @@
                           refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[UpdateAuditKey]"
                           dataType="i4"
                           name="UpdateAuditKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Year]"
+                          dataType="i4"
+                          name="Year" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -3419,6 +3429,15 @@
                           lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].Columns[CrashMonth]"
                           name="CrashMonth"
                           truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].Columns[CrashYear]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CrashYear]"
+                          lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].Columns[CrashYear]"
+                          name="CrashYear"
+                          truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -3453,6 +3472,10 @@
                           refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CrashMonth]"
                           dataType="i4"
                           name="CrashMonth" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CrashYear]"
+                          dataType="i4"
+                          name="CrashYear" />
                       </externalMetadataColumns>
                     </output>
                     <output
@@ -3498,6 +3521,11 @@
                           dataType="i4"
                           lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CrashMonth]"
                           name="CrashMonth" />
+                        <outputColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CrashYear]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CrashYear]"
+                          name="CrashYear" />
                         <outputColumn
                           refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
@@ -3669,6 +3697,22 @@
                               name="NewSortKeyPosition">1</property>
                           </properties>
                         </inputColumn>
+                        <inputColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\Sort.Inputs[Sort Input].Columns[CrashYear]"
+                          cachedDataType="i4"
+                          cachedName="CrashYear"
+                          lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].Columns[CrashYear]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
                       </inputColumns>
                       <externalMetadataColumns />
                     </input>
@@ -3785,6 +3829,19 @@
                               dataType="System.Int32"
                               description="Specifies the lineage identifier of the input column that is associated with this output column."
                               name="SortColumnId">#{Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\DER_CreateDateKey.Outputs[Derived Column Output].Columns[DateKey]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\Sort.Outputs[Sort Output].Columns[CrashYear]"
+                          dataType="i4"
+                          lineageId="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\Sort.Outputs[Sort Output].Columns[CrashYear]"
+                          name="CrashYear">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\OLE DB Source.Outputs[OLE DB Source Output].Columns[CrashYear]}</property>
                           </properties>
                         </outputColumn>
                       </outputColumns>
@@ -12062,7 +12119,7 @@ where [refTable].[CrashType] = ?</property>
     design-time-name="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="186.4,41.6"
           Id="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW\DER_AddAuditColumns"
@@ -12089,58 +12146,32 @@ where [refTable].[CrashType] = ?</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="32.1714290367103,13.1058822523974"
+              EndConnector="32.17142903671,13.105882252398"
               Start="0,0"
-              End="24.6714290367103,13.1058822523974">
+              End="24.67142903671,13.105882252398">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="12.0857145183552,0" />
+                    End="12.085714518355,0" />
                   <mssgle:CubicBezierSegment
-                    Point1="12.0857145183552,0"
-                    Point2="16.0857145183552,0"
-                    Point3="16.0857145183552,4" />
+                    Point1="12.085714518355,0"
+                    Point2="16.085714518355,0"
+                    Point3="16.085714518355,4" />
                   <mssgle:LineSegment
-                    End="16.0857145183552,9.10588225239735" />
+                    End="16.085714518355,9.10588225239803" />
                   <mssgle:CubicBezierSegment
-                    Point1="16.0857145183552,9.10588225239735"
-                    Point2="16.0857145183552,13.1058822523974"
-                    Point3="20.0857145183552,13.1058822523974" />
+                    Point1="16.085714518355,9.10588225239803"
+                    Point2="16.085714518355,13.105882252398"
+                    Point3="20.085714518355,13.105882252398" />
                   <mssgle:LineSegment
-                    End="24.6714290367103,13.1058822523974" />
+                    End="24.67142903671,13.105882252398" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW.Paths[Sort Output]"
-          TopLeft="305.64285764235,209.835293970182">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,42.4117647212991"
-              Start="0,0"
-              End="0,34.9117647212991">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,34.9117647212991" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -12174,9 +12205,29 @@ where [refTable].[CrashType] = ?</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SEQ_Load_Dimensions_SCD\DFT_Load_DimDate_StageToDW.Paths[Sort Output]"
+          TopLeft="305.64285764235,209.835293970182">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.411764721299"
+              Start="0,0"
+              End="0,34.911764721299">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.911764721299" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -12185,34 +12236,32 @@ where [refTable].[CrashType] = ?</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="19.8571429803049,42.517646985091"
+              EndConnector="19.857142980305,42.5176469850908"
               Start="0,0"
-              End="19.8571429803049,35.017646985091">
+              End="19.857142980305,35.0176469850908">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,17.2588234925455" />
+                    End="0,17.2588234925454" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,17.2588234925455"
-                    Point2="0,21.2588234925455"
-                    Point3="4,21.2588234925455" />
+                    Point1="0,17.2588234925454"
+                    Point2="0,21.2588234925454"
+                    Point3="4,21.2588234925454" />
                   <mssgle:LineSegment
-                    End="15.8571429803049,21.2588234925455" />
+                    End="15.857142980305,21.2588234925454" />
                   <mssgle:CubicBezierSegment
-                    Point1="15.8571429803049,21.2588234925455"
-                    Point2="19.8571429803049,21.2588234925455"
-                    Point3="19.8571429803049,25.2588234925455" />
+                    Point1="15.857142980305,21.2588234925454"
+                    Point2="19.857142980305,21.2588234925454"
+                    Point3="19.857142980305,25.2588234925454" />
                   <mssgle:LineSegment
-                    End="19.8571429803049,35.017646985091" />
+                    End="19.857142980305,35.0176469850908" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -13904,6 +13953,32 @@ where [refTable].[CrashType] = ?</property>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Facts\DFT_Load_FactCause_StageToDW\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\SEQ_Load_Facts\DFT_Load_FactCause_StageToDW\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\SEQ_Load_Facts\DFT_Load_FactTime_StageToDW">
     <LayoutInfo>
@@ -14128,32 +14203,6 @@ where [refTable].[CrashType] = ?</property>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\SEQ_Load_Facts\DFT_Load_FactTime_StageToDW\OLE DB Destination">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Facts\DFT_Load_FactCause_StageToDW\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\SEQ_Load_Facts\DFT_Load_FactCause_StageToDW\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
