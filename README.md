@@ -4,29 +4,31 @@ This project implements a complete ETL pipeline using **SQL Server Integration S
 
 ## 📊 Overview
 
-* **Source**: Raw traffic accident data from `TrafficAccidents.csv`
-* **ETL Pipeline**: CSV → Dataset → Source → Stage → Data Warehouse
+* **Source**: Raw traffic accident data from `TrafficAccidents.csv`  
+* **ETL Pipeline**: CSV → Dataset → Source → Stage → Data Warehouse  
 * **Tools Used**: SSIS, SQL Server, T-SQL
 
 The solution enables structured, clean, and analytical-ready data for downstream reporting and dashboarding.
 
 ## ⚙️ ETL Architecture
 
-```
-             +----------------------+       
-             | TrafficAccidents.csv |
-             +----------------------+
-                      ↓
-           [01] Load to Dataset (Raw)
-                      ↓
-           [02] Normalize into Source Tables
-                      ↓
-           [03] Transform to Stage
-                      ↓
-           [04] Load to Data Warehouse (Star Schema)
-```
+         +----------------------+       
+         | TrafficAccidents.csv |
+         +----------------------+
+                  ↓
+       [01] Load to Dataset (Raw)
+                  ↓
+       [02] Normalize into Source Tables
+                  ↓
+       [03] Transform to Stage
+                  ↓
+       [04] Load to Data Warehouse (Star Schema)
 
-### 📦 Key Packages
+---
+
+## 📦 SSIS Packages Overview
+
+The project includes 4 main SSIS packages, each representing a specific stage in the ETL process:
 
 | Package                                 | Description                                            |
 | --------------------------------------- | ------------------------------------------------------ |
@@ -35,59 +37,69 @@ The solution enables structured, clean, and analytical-ready data for downstream
 | `03_load_source_to_stage.dtsx`          | Prepare cleaned, joined data for DW                    |
 | `04_load_stage_to_dwh.dtsx`             | Final load into DW with surrogate keys, SCD, and audit |
 
+📸 **Visual Studio – All SSIS Packages**
+
+![SSIS Packages Overview](images/ssis_packages_overview.jpg)
+
+---
+
+## ✅ Package Execution Screenshots
+
+Screenshots of successful package execution:
+
+**1. Load CSV to Dataset**  
+![01](images/01_success.jpg)
+
+**2. Load Dataset to Source Tables**  
+![02](images/02_success.jpg)
+
+**3. Load Source to Stage**  
+![03](images/03_success.jpg)
+
+**4. Load Stage to Data Warehouse**  
+![04](images/04_success.jpg)
+
+---
+
 ## 🏗️ Data Warehouse Schema
 
-* **Fact Tables**:
+### 🔷 Fact Tables
+- `FactTime`: facts about crash time
+- `FactCause`: facts related to crash causes
 
-  * `FactTime`: crash time facts
-  * `FactCause`: cause-related facts
+### 🔶 Dimension Tables
+- `DimDate`
+- `DimCrashType`
+- `DimLighting`
+- `DimWeather`
+- `DimTrafficControl`
+- `DimAudit`
 
-* **Dimension Tables**:
 
-  * `DimDate`
-  * `DimCrashType`
-  * `DimLighting`
-  * `DimWeather`
-  * `DimTrafficControl`
-  * `DimAudit`
+---
 
-* Surrogate keys are used across all tables, and slowly changing dimensions (SCD Type 2) are implemented where applicable.
+## ▶️ How to Run
 
-## 📌 Features
+1. Open `traffic-warehouse-project.sln` in Visual Studio with SSIS extension  
+2. Configure the following Connection Managers:
+   - `CSV_TrafficAccidents.conmgr`
+   - `Traffic_Source.conmgr`
+   - `Traffic_Stage.conmgr`
+   - `Traffic_DW.conmgr`
+3. Run the packages in order:  
+   `01` → `02` → `03` → `04`  
+4. Verify output in `Fact` and `Dim` tables inside your target DW
 
-* Data type normalization (Unicode → non-Unicode)
-* Derived fields: Hour, Day, Month, Year
-* Surrogate Key and Audit Key management
-* Error handling, logging, and SCD Type 2 implementation
-* Ready for reporting and visualization
-
-## 📁 Project Structure
-
-```
-traffic-warehouse-ssis/
-├── source_data/
-├── sql/
-├── traffic-warehouse-project/
-│   ├── 01_load_csv_to_dataset.dtsx
-│   ├── 02_load_dataset_to_source_tables.dtsx
-│   ├── 03_load_source_to_stage.dtsx
-│   └── 04_load_stage_to_dwh.dtsx
-├── traffic-warehouse-project.sln
-```
-
-## ✅ How to Run
-
-1. Open `traffic-warehouse-project.sln` in Visual Studio with SSIS plugin.
-2. Set up connection managers for:
-
-   * `CSV_TrafficAccidents`
-   * `Traffic_Source`, `Traffic_Stage`, `Traffic_DW`
-3. Run packages in order: 01 → 04
+---
 
 ## 📈 Outcome
 
-The final Data Warehouse allows accurate, fast, and scalable analysis of traffic accidents, supporting KPIs such as:
+The final warehouse enables fast, reliable analytics on traffic crash data:
+- Crash frequency by time, weather, and lighting conditions
+- Time-based trend reports
+- Historical dimension tracking via SCD Type 2
+---
 
-* Accidents by weather condition
-* Accidents by lighting or time of day
-* Time-series trends of accident causes
+## Authors
+
+- **Hung Nguyen** – [@hungfnguyen](https://github.com/hungfnguyen)
